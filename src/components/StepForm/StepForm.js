@@ -1,91 +1,61 @@
 import React, { useState } from 'react';
-import AccountInfoForm from './AccountInfoForm';
-import ConfirmMessage from './ConfirmMessage';
-import MessageForm from './MessageForm';
-import PersonalInfoForm from './PersonalInfoForm';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import NavBar from './NavBar';
+import InputField from './InputField';
 
 const StepForm = () => {
     const [currentStep, setCurrentStep] = useState(1);
+    // const [currentStep, setCurrentStep] = useState(1);
     const handleNext = () => {
-        setCurrentStep(currentStep+1);
-    }
-    const handleSkip = () => {
-        setCurrentStep(currentStep+1);
+        setCurrentStep(currentStep + 1);
     }
     const handlePrevious = () => {
-        setCurrentStep(currentStep-1);
+        setCurrentStep(currentStep - 1);
     }
-    const handleSubmit = () => {
-        setCurrentStep(currentStep+1);
-
-    }
-    console.log(currentStep);
+    const formik = useFormik({
+        initialValues: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            message: ''
+        },
+        validationSchema: Yup.object({
+            firstName: Yup.string()
+                .max(15, 'Must be 15 characters or less')
+                .required('Required'),
+            lastName: Yup.string()
+                .max(20, 'Must be 20 characters or less')
+                .required('Required'),
+            email: Yup.string().email('Invalid email address').required('Required'),
+            message: Yup.string()
+                .max(15, 'Must be 15 characters or less')
+                .required('Required'),
+        }),
+        onSubmit: values => {
+            alert(JSON.stringify(values, null, 2));
+        },
+    });
+    console.log(formik.values.firstName);
     return (
         <div className="p-5 mt-10">
             <h1 className='text-2xl font-bold'>Simple Step Form:</h1>
-            <div className="mx-4 p-4">
-                <div className="flex items-center">
-                    <div className="flex items-center text-teal-600 relative">
-                        <div className="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-teal-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-bookmark ">
-                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                        </div>
-                        <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-teal-600">Personal</div>
-                    </div>
-                    <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-teal-600"></div>
-                    <div className="flex items-center text-white relative">
-                        <div className="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 bg-teal-600 border-teal-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-user-plus ">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="8.5" cy="7" r="4"></circle>
-                                <line x1="20" y1="8" x2="20" y2="14"></line>
-                                <line x1="23" y1="11" x2="17" y2="11"></line>
-                            </svg>
-                        </div>
-                        <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-teal-600">Account</div>
-                    </div>
-                    <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"></div>
-                    <div className="flex items-center text-gray-500 relative">
-                        <div className="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-mail ">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                        </div>
-                        <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-gray-500">Message</div>
-                    </div>
-                    <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"></div>
-                    <div className="flex items-center text-gray-500 relative">
-                        <div className="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-database ">
-                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-                            </svg>
-                        </div>
-                        <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-gray-500">Confirm</div>
-                    </div>
-                </div>
-            </div>
+            <NavBar currentStep={currentStep} />
             <div className="mt-8 p-4">
                 {/* component starts */}
-
-                {currentStep===1 && <PersonalInfoForm currentStep={currentStep} setCurrentStep={setCurrentStep}></PersonalInfoForm>}
-                {currentStep===2 &&  <AccountInfoForm currentStep={currentStep} setCurrentStep={setCurrentStep}></AccountInfoForm>}
-                {currentStep===3 &&  <MessageForm currentStep={currentStep} setCurrentStep={setCurrentStep}></MessageForm>}
-                {currentStep===4 &&  <ConfirmMessage currentStep={currentStep} setCurrentStep={setCurrentStep}></ConfirmMessage>}
-
-                {/* component ends */}
-                <div className="flex p-2 mt-4">
-                    <button onClick={handlePrevious} className={`${(currentStep===4 || currentStep===1) && 'hidden'} text-base hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer  hover:bg-gray-200 bg-gray-100  text-gray-700  border duration-200 ease-in-out  border-gray-600 transition`}>Previous</button>
-                    <div className="flex-auto flex flex-row-reverse">
-                        {currentStep !==3 ? <button onClick={handleNext} className={`${currentStep===4 && 'hidden'} text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer  hover:bg-teal-600 bg-teal-600  text-teal-100  border duration-200 ease-in-out  border-teal-600 transition`}>Next</button> :
-                        <button onClick={handleSubmit} className={`${currentStep===4 && 'hidden'} text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer  hover:bg-teal-600 bg-teal-600  text-teal-100  border duration-200 ease-in-out  border-teal-600 transition`}>Submit</button>}
-
-                        <button onClick={handleSkip} className={`${(currentStep===3 || currentStep===4) && 'hidden'} text-base hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer  hover:bg-teal-200 bg-teal-100  text-teal-700  border duration-200 ease-in-out  border-teal-600 transition`}>Skip</button>
+                <form className='w-2/4 mx-auto my-5' onSubmit={formik.handleSubmit}>
+                    <h1 className='text-3xl text-center my-5 text-green-600'>Lets Use FORMIK with YUP</h1>
+                    {currentStep === 1 && <InputField formik={formik} itemName="firstName" />}
+                    {currentStep === 2 && <InputField formik={formik} itemName="lastName" />}
+                    {currentStep === 3 && <InputField formik={formik} itemName="email" type="email" />}
+                    {currentStep === 4 && <InputField formik={formik} itemName="message" />}
+                    <div className="flex p-2 mt-4">
+                        <button onClick={handlePrevious} className={`${(currentStep === 5 || currentStep === 1) && 'hidden'} text-base hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer  hover:bg-gray-200 bg-gray-100  text-gray-700  border duration-200 ease-in-out  border-gray-600 transition`}>Previous</button>
+                        <div className="flex-auto flex flex-row-reverse">
+                            <button type={currentStep === 4 ? 'submit' : ''} onClick={handleNext} className={`${currentStep === 5 ? 'hidden' : ''} text-base ml-2 hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer  hover:bg-teal-600 bg-teal-600  text-teal-100  border duration-200 ease-in-out  border-teal-600 transition`}>{currentStep === 4 ? 'Submit' : 'Next'}</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );
