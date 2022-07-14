@@ -1,9 +1,16 @@
-const InputField = ({ formik, itemName, type = "text" }) => {
+const InputField = ({ formik, itemName, type = "text", setIsError }) => {
+    const currentValue = formik.values[itemName];
+    const isTouched = formik.touched[itemName];
+    const isError = formik.errors[itemName];
+    // console.log(isError);
+    if (isError) {
+        // console.log('ami call hoisi', isError);
+        setIsError(true);
+    }
+    else {
+        setIsError(false);
 
-    const currentValue = formik.values.firsName;
-    const isTouched = formik.touched.firsName;
-    const isError = formik.errors.firsName;
-    console.log('vitore', itemName);
+    }
     return <div>
         <label htmlFor={itemName}>{itemName}</label>
         <input
